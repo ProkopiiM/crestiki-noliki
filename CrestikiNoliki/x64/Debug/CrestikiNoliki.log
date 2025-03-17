@@ -1,0 +1,4 @@
+﻿  CrestikiNoliki.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+C:\Users\ghjbr\source\repos\CrestikiNoliki\CrestikiNoliki\CrestikiNoliki.cpp(1228,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  CrestikiNoliki.vcxproj -> C:\Users\ghjbr\source\repos\CrestikiNoliki\x64\Debug\CrestikiNoliki.exe

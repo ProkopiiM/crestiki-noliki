@@ -1,0 +1,1708 @@
+//версия 1.0
+//// Класс для игрока-компьютера (сложный уровень)
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    board.setCell(i, j, symbol);
+//                    int score = minimax(board, 0, false);
+//                    board.setCell(i, j, ' ');  // Отмена хода
+//
+//                    if (score > bestScore) {
+//                        bestScore = score;
+//                        bestX = i;
+//                        bestY = j;
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 10;
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -10;
+//        return 0;
+//    }
+//
+//    // Алгоритм минимакс
+//    int minimax(GameBoard& board, int depth, bool isMaximizing) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена
+//        if (score == 10 || score == -10 || board.isFull()) return score;
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+////версия 1.1
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    board.setCell(i, j, symbol);
+//                    int score = minimax(board, 0, false, -1000, 1000);
+//                    board.setCell(i, j, ' ');  // Отмена хода
+//
+//                    if (score > bestScore) {
+//                        bestScore = score;
+//                        bestX = i;
+//                        bestY = j;
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 10;
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -10;
+//        return 0;
+//    }
+//
+//    // Алгоритм минимакс с альфа-бета отсечением
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена
+//        if (score == 10 || score == -10 || board.isFull()) return score;
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+//версия 1.3
+//// Класс для игрока-компьютера (сложный уровень)
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        // Ограничение глубины поиска (например, 3 хода вперед)
+//        int maxDepth = 3;
+//
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    board.setCell(i, j, symbol);
+//                    int score = minimax(board, 0, false, -1000, 1000, maxDepth);
+//                    board.setCell(i, j, ' ');  // Отмена хода
+//
+//                    if (score > bestScore) {
+//                        bestScore = score;
+//                        bestX = i;
+//                        bestY = j;
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 10;
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -10;
+//        return 0;
+//    }
+//
+//    int heuristicEvaluation(const GameBoard& board) const {
+//        int score = 0;
+//
+//        // Оценка для текущего игрока (компьютера)
+//        score += evaluateLines(board, symbol);
+//
+//        // Оценка для противника
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        score -= evaluateLines(board, opponentSymbol);
+//
+//        return score;
+//    }
+//
+//    // Вспомогательная функция для оценки линий
+//    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+//        int score = 0;
+//        int winCondition = board.getWinCondition();  // Получаем условие победы
+//
+//        // Проверка всех возможных линий
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                // Горизонтальные линии
+//                if (j + winCondition <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 0, 1, playerSymbol, winCondition);
+//                }
+//                // Вертикальные линии
+//                if (i + winCondition <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 0, playerSymbol, winCondition);
+//                }
+//                // Диагонали вниз
+//                if (i + winCondition <= board.getSize() && j + winCondition <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 1, playerSymbol, winCondition);
+//                }
+//                // Диагонали вверх
+//                if (i - winCondition >= -1 && j + winCondition <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, -1, 1, playerSymbol, winCondition);
+//                }
+//            }
+//        }
+//
+//        return score;
+//    }
+//
+//    // Вспомогательная функция для оценки одной линии
+//    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol, int winCondition) const {
+//        int playerCount = 0;
+//        int emptyCount = 0;
+//
+//        for (int k = 0; k < winCondition; ++k) {
+//            char cell = board.getCell(x + k * dx, y + k * dy);
+//            if (cell == playerSymbol) {
+//                playerCount++;
+//            }
+//            else if (cell == ' ') {
+//                emptyCount++;
+//            }
+//            else {
+//                // Если встретился символ противника, линия не подходит
+//                return 0;
+//            }
+//        }
+//
+//        // Оценка линии в зависимости от количества символов игрока и пустых клеток
+//        if (playerCount == winCondition - 1 && emptyCount == 1) {
+//            // Один шаг до победы
+//            return 100;
+//        }
+//        else if (playerCount == winCondition - 2 && emptyCount == 2) {
+//            // Два шага до победы
+//            return 10;
+//        }
+//        else if (playerCount == winCondition - 3 && emptyCount == 3) {
+//            // Три шага до победы
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+//
+//    // Алгоритм минимакс с альфа-бета отсечением и ограничением глубины
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена или достигнута максимальная глубина
+//        if (score == 10 || score == -10 || board.isFull() || depth == maxDepth) {
+//            if (depth == maxDepth) {
+//                // Используем эвристическую оценку, если достигнута максимальная глубина
+//                return heuristicEvaluation(board);
+//            }
+//            return score;
+//        }
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+//ограничение вариантов но все равно очень медленно
+////версия 1.4
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        // Ограничение глубины поиска
+//        int maxDepth = (board.getSize() <= 5) ? 5 : 3;
+//
+//        // Ограничение количества рассматриваемых ходов для больших полей
+//        int maxMoves = (board.getSize() > 7) ? 10 : board.getSize() * board.getSize();
+//
+//        // Вектор для хранения всех возможных ходов и их оценок
+//        vector<tuple<int, int, int>> moves;
+//
+//        // Собираем все возможные ходы и оцениваем их
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    // Симулируем ход
+//                    board.setCell(i, j, symbol);
+//
+//                    // Оцениваем ход с помощью эвристической функции
+//                    int score = heuristicEvaluation(board);
+//                    moves.push_back(make_tuple(score, i, j));
+//
+//                    // Отменяем ход
+//                    board.setCell(i, j, ' ');
+//                }
+//            }
+//        }
+//
+//        // Сортируем ходы по оценке (от лучшего к худшему)
+//        sort(moves.rbegin(), moves.rend());
+//
+//        // Ограничиваем количество рассматриваемых ходов
+//        if (moves.size() > maxMoves) {
+//            moves.resize(maxMoves);
+//        }
+//
+//        // Перебираем топ-N ходов и выбираем лучший
+//        for (const auto& move : moves) {
+//            int score = get<0>(move);
+//            int x = get<1>(move);
+//            int y = get<2>(move);
+//
+//            // Симулируем ход
+//            board.setCell(x, y, symbol);
+//
+//            // Оцениваем ход с помощью Minimax
+//            int currentScore = minimax(board, 0, false, -1000, 1000, maxDepth);
+//            board.setCell(x, y, ' ');  // Отменяем ход
+//
+//            // Выбираем лучший ход
+//            if (currentScore > bestScore) {
+//                bestScore = currentScore;
+//                bestX = x;
+//                bestY = y;
+//            }
+//        }
+//
+//        // Делаем лучший ход
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 1000;  // Компьютер выиграл
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -1000;  // Противник выиграл
+//        return heuristicEvaluation(board);  // Эвристическая оценка
+//    }
+//
+//    // Эвристическая оценка
+//    int heuristicEvaluation(const GameBoard& board) const {
+//        int score = 0;
+//
+//        // Оценка для текущего игрока (компьютера)
+//        score += evaluateLines(board, symbol);
+//
+//        // Оценка для противника
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        score -= evaluateLines(board, opponentSymbol);
+//
+//        return score;
+//    }
+//
+//    // Оценка линий
+//    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+//        int score = 0;
+//
+//        // Проверка всех возможных линий
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                // Горизонтальные линии
+//                if (j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 0, 1, playerSymbol);
+//                }
+//                // Вертикальные линии
+//                if (i + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 0, playerSymbol);
+//                }
+//                // Диагонали вниз
+//                if (i + board.getWinCondition() <= board.getSize() && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 1, playerSymbol);
+//                }
+//                // Диагонали вверх
+//                if (i - board.getWinCondition() >= -1 && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, -1, 1, playerSymbol);
+//                }
+//            }
+//        }
+//
+//        return score;
+//    }
+//
+//    // Оценка одной линии
+//    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol) const {
+//        int playerCount = 0;
+//        int emptyCount = 0;
+//
+//        for (int k = 0; k < board.getWinCondition(); ++k) {
+//            char cell = board.getCell(x + k * dx, y + k * dy);
+//            if (cell == playerSymbol) {
+//                playerCount++;
+//            }
+//            else if (cell == ' ') {
+//                emptyCount++;
+//            }
+//            else {
+//                // Если встретился символ противника, линия не подходит
+//                return 0;
+//            }
+//        }
+//
+//        // Оценка линии
+//        if (playerCount == board.getWinCondition() - 1 && emptyCount == 1) {
+//            // Один шаг до победы
+//            return 100;
+//        }
+//        else if (playerCount == board.getWinCondition() - 2 && emptyCount == 2) {
+//            // Два шага до победы
+//            return 10;
+//        }
+//        else if (playerCount == board.getWinCondition() - 3 && emptyCount == 3) {
+//            // Три шага до победы
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+//
+//    // Алгоритм Minimax с альфа-бета отсечением
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена или достигнута максимальная глубина
+//        if (score == 1000 || score == -1000 || board.isFull() || depth == maxDepth) {
+//            return score;
+//        }
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+////версия 1.5
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        // Проверка, может ли компьютер выиграть следующим ходом
+//        if (tryWin(board, symbol)) {
+//            return;
+//        }
+//
+//        // Ограничение глубины поиска
+//        int maxDepth = (board.getSize() <= 7) ? 7 : 3;
+//
+//        // Поиск лучшего хода с помощью Minimax
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    // Симулируем ход
+//                    board.setCell(i, j, symbol);
+//
+//                    // Оцениваем ход с помощью Minimax
+//                    int score = minimax(board, 0, false, -1000, 1000, maxDepth);
+//                    board.setCell(i, j, ' ');  // Отменяем ход
+//
+//                    // Выбираем лучший ход
+//                    if (score > bestScore) {
+//                        bestScore = score;
+//                        bestX = i;
+//                        bestY = j;
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Делаем лучший ход
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+
+////версия 1.5.2
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        // Проверка, может ли компьютер выиграть следующим ходом
+//        if (tryWin(board, symbol)) {
+//            return;
+//        }
+//
+//        // Ограничение глубины поиска
+//        int maxDepth = (board.getSize() <= 7) ? 7 : 3;
+//
+//        // Вектор для хранения результатов потоков
+//        std::vector<std::future<int>> futures;
+//        std::vector<std::tuple<int, int>> moves;
+//
+//        // Создаем потоки для каждого возможного хода
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    // Запускаем поток для расчета оценки хода
+//                    futures.push_back(std::async(std::launch::async, [this, &board, i, j, maxDepth]() {
+//                        // Симулируем ход
+//                        board.setCell(i, j, symbol);
+//
+//                        // Оцениваем ход с помощью Minimax
+//                        int score = minimax(board, 0, false, -1000, 1000, maxDepth);
+//                        board.setCell(i, j, ' ');  // Отменяем ход
+//
+//                        return score;
+//                        }));
+//
+//                    // Запоминаем координаты хода
+//                    moves.push_back({ i, j });
+//                }
+//            }
+//        }
+//
+//        // Ждем завершения всех потоков и выбираем лучший ход
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        for (size_t k = 0; k < futures.size(); ++k) {
+//            int score = futures[k].get();  // Получаем результат потока
+//            if (score > bestScore) {
+//                bestScore = score;
+//                bestX = std::get<0>(moves[k]);
+//                bestY = std::get<1>(moves[k]);
+//            }
+//        }
+//
+//        // Делаем лучший ход
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Попытка выиграть следующим ходом
+//    bool tryWin(GameBoard& board, char playerSymbol) {
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    board.setCell(i, j, playerSymbol);
+//                    if (board.checkWin(playerSymbol)) {
+//                        return true;  // Ход уже сделан
+//                    }
+//                    board.setCell(i, j, ' ');  // Отменяем ход
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 1000;  // Компьютер выиграл
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -1000;  // Противник выиграл
+//        return heuristicEvaluation(board);  // Эвристическая оценка
+//    }
+//
+//    // Эвристическая оценка
+//    int heuristicEvaluation(const GameBoard& board) const {
+//        int score = 0;
+//
+//        // Оценка для текущего игрока (компьютера)
+//        score += evaluateLines(board, symbol);
+//
+//        // Оценка для противника
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        score -= evaluateLines(board, opponentSymbol);
+//
+//        return score;
+//    }
+//
+//    // Оценка линий
+//    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+//        int score = 0;
+//
+//        // Проверка всех возможных линий
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                // Горизонтальные линии
+//                if (j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 0, 1, playerSymbol);
+//                }
+//                // Вертикальные линии
+//                if (i + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 0, playerSymbol);
+//                }
+//                // Диагонали вниз
+//                if (i + board.getWinCondition() <= board.getSize() && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 1, playerSymbol);
+//                }
+//                // Диагонали вверх
+//                if (i - board.getWinCondition() >= -1 && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, -1, 1, playerSymbol);
+//                }
+//            }
+//        }
+//
+//        return score;
+//    }
+//
+//    // Оценка одной линии
+//    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol) const {
+//        int playerCount = 0;
+//        int emptyCount = 0;
+//
+//        for (int k = 0; k < board.getWinCondition(); ++k) {
+//            char cell = board.getCell(x + k * dx, y + k * dy);
+//            if (cell == playerSymbol) {
+//                playerCount++;
+//            }
+//            else if (cell == ' ') {
+//                emptyCount++;
+//            }
+//            else {
+//                // Если встретился символ противника, линия не подходит
+//                return 0;
+//            }
+//        }
+//
+//        // Оценка линии
+//        if (playerCount == board.getWinCondition() - 1 && emptyCount == 1) {
+//            // Один шаг до победы
+//            return 100;
+//        }
+//        else if (playerCount == board.getWinCondition() - 2 && emptyCount == 2) {
+//            // Два шага до победы
+//            return 10;
+//        }
+//        else if (playerCount == board.getWinCondition() - 3 && emptyCount == 3) {
+//            // Три шага до победы
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+//
+//    // Алгоритм Minimax с альфа-бета отсечением
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена или достигнута максимальная глубина
+//        if (score == 1000 || score == -1000 || board.isFull() || depth == maxDepth) {
+//            return score;
+//        }
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отменяем ход
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отменяем ход
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+//версия 1.6 (откат назад который не работает в итоге)
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//
+//        // Проверка, может ли компьютер выиграть следующим ходом
+//        if (tryWin(board, symbol)) {
+//            return;
+//        }
+//
+//        // Проверка, может ли противник выиграть следующим ходом, и блокировка
+//        if (tryWin(board, opponentSymbol)) {
+//            return;
+//        }
+//
+//        // Ограничение глубины поиска
+//        int maxDepth = (board.getSize() <= 7) ? 7 : 3;
+//
+//        // Поиск лучшего хода с помощью Minimax
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    // Симулируем ход
+//                    board.setCell(i, j, symbol);
+//
+//                    // Оцениваем ход с помощью Minimax
+//                    int score = minimax(board, 0, false, -1000, 1000, maxDepth);
+//                    board.setCell(i, j, ' ');  // Отменяем ход
+//
+//                    // Выбираем лучший ход
+//                    if (score > bestScore) {
+//                        bestScore = score;
+//                        bestX = i;
+//                        bestY = j;
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Делаем лучший ход
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Попытка выиграть или заблокировать
+//    bool tryWin(GameBoard& board, char playerSymbol) {
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    board.setCell(i, j, playerSymbol);
+//                    if (board.checkWin(playerSymbol)) {
+//                        board.setCell(i, j, symbol);  // Ход компьютера
+//                        return true;
+//                    }
+//                    board.setCell(i, j, ' ');  // Отменяем ход
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 1000;  // Компьютер выиграл
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -1000;  // Противник выиграл
+//        return heuristicEvaluation(board);  // Эвристическая оценка
+//    }
+//
+//    // Эвристическая оценка
+//    int heuristicEvaluation(const GameBoard& board) const {
+//        int score = 0;
+//
+//        // Оценка для текущего игрока (компьютера)
+//        score += evaluateLines(board, symbol);
+//
+//        // Оценка для противника
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        score -= evaluateLines(board, opponentSymbol);
+//
+//        return score;
+//    }
+//
+//    // Оценка линий
+//    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+//        int score = 0;
+//
+//        // Проверка всех возможных линий
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                // Горизонтальные линии
+//                if (j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 0, 1, playerSymbol);
+//                }
+//                // Вертикальные линии
+//                if (i + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 0, playerSymbol);
+//                }
+//                // Диагонали вниз
+//                if (i + board.getWinCondition() <= board.getSize() && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 1, playerSymbol);
+//                }
+//                // Диагонали вверх
+//                if (i - board.getWinCondition() >= -1 && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, -1, 1, playerSymbol);
+//                }
+//            }
+//        }
+//
+//        return score;
+//    }
+//
+//    // Оценка одной линии
+//    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol) const {
+//        int playerCount = 0;
+//        int emptyCount = 0;
+//
+//        for (int k = 0; k < board.getWinCondition(); ++k) {
+//            char cell = board.getCell(x + k * dx, y + k * dy);
+//            if (cell == playerSymbol) {
+//                playerCount++;
+//            }
+//            else if (cell == ' ') {
+//                emptyCount++;
+//            }
+//            else {
+//                // Если встретился символ противника, линия не подходит
+//                return 0;
+//            }
+//        }
+//
+//        // Оценка линии
+//        if (playerCount == board.getWinCondition() - 1 && emptyCount == 1) {
+//            // Один шаг до победы
+//            return 100;
+//        }
+//        else if (playerCount == board.getWinCondition() - 2 && emptyCount == 2) {
+//            // Два шага до победы
+//            return 10;
+//        }
+//        else if (playerCount == board.getWinCondition() - 3 && emptyCount == 3) {
+//            // Три шага до победы
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+//
+//    // Алгоритм Minimax с альфа-бета отсечением
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена или достигнута максимальная глубина
+//        if (score == 1000 || score == -1000 || board.isFull() || depth == maxDepth) {
+//            return score;
+//        }
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отменяем ход
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отменяем ход
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+//версия 1.7
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        // Ограничение глубины поиска
+//        int maxDepth = (board.getSize() <= 5) ? 5 : 3;
+//
+//        // Ограничение количества рассматриваемых ходов для больших полей
+//        int maxMoves = (board.getSize() > 7) ? 10 : board.getSize() * board.getSize();
+//
+//        // Вектор для хранения всех возможных ходов и их оценок
+//        vector<tuple<int, int, int>> moves;
+//
+//        // Собираем все возможные ходы и оцениваем их
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    // Симулируем ход
+//                    board.setCell(i, j, symbol);
+//
+//                    // Оцениваем ход с помощью эвристической функции
+//                    int score = heuristicEvaluation(board);
+//                    moves.push_back(make_tuple(score, i, j));
+//
+//                    // Отменяем ход
+//                    board.setCell(i, j, ' ');
+//                }
+//            }
+//        }
+//
+//        // Сортируем ходы по оценке (от лучшего к худшему)
+//        sort(moves.rbegin(), moves.rend());
+//
+//        // Ограничиваем количество рассматриваемых ходов
+//        if (moves.size() > maxMoves) {
+//            moves.resize(maxMoves);
+//        }
+//
+//        // Перебираем топ-N ходов и выбираем лучший
+//        for (const auto& move : moves) {
+//            int score = get<0>(move);
+//            int x = get<1>(move);
+//            int y = get<2>(move);
+//
+//            // Симулируем ход
+//            board.setCell(x, y, symbol);
+//
+//            // Оцениваем ход с помощью Minimax
+//            int currentScore = minimax(board, 0, false, -1000, 1000, maxDepth);
+//            board.setCell(x, y, ' ');  // Отменяем ход
+//
+//            // Выбираем лучший ход
+//            if (currentScore > bestScore) {
+//                bestScore = currentScore;
+//                bestX = x;
+//                bestY = y;
+//            }
+//        }
+//
+//        // Делаем лучший ход
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 1000;  // Компьютер выиграл
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -1000;  // Противник выиграл
+//        return heuristicEvaluation(board);  // Эвристическая оценка
+//    }
+//
+//    // Эвристическая оценка
+//    int heuristicEvaluation(const GameBoard& board) const {
+//        int score = 0;
+//
+//        // Оценка для текущего игрока (компьютера)
+//        score += evaluateLines(board, symbol);
+//
+//        // Оценка для противника
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        score -= evaluateLines(board, opponentSymbol);
+//
+//        return score;
+//    }
+//
+//    // Оценка линий
+//    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+//        int score = 0;
+//
+//        // Проверка всех возможных линий
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                // Горизонтальные линии
+//                if (j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 0, 1, playerSymbol);
+//                }
+//                // Вертикальные линии
+//                if (i + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 0, playerSymbol);
+//                }
+//                // Диагонали вниз
+//                if (i + board.getWinCondition() <= board.getSize() && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 1, playerSymbol);
+//                }
+//                // Диагонали вверх
+//                if (i - board.getWinCondition() >= -1 && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, -1, 1, playerSymbol);
+//                }
+//            }
+//        }
+//
+//        return score;
+//    }
+//
+//    // Оценка одной линии
+//    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol) const {
+//        int playerCount = 0;
+//        int emptyCount = 0;
+//
+//        for (int k = 0; k < board.getWinCondition(); ++k) {
+//            char cell = board.getCell(x + k * dx, y + k * dy);
+//            if (cell == playerSymbol) {
+//                playerCount++;
+//            }
+//            else if (cell == ' ') {
+//                emptyCount++;
+//            }
+//            else {
+//                // Если встретился символ противника, линия не подходит
+//                return 0;
+//            }
+//        }
+//
+//        // Оценка линии
+//        if (playerCount == board.getWinCondition() - 1 && emptyCount == 1) {
+//            // Один шаг до победы
+//            return 100;
+//        }
+//        else if (playerCount == board.getWinCondition() - 2 && emptyCount == 2) {
+//            // Два шага до победы
+//            return 10;
+//        }
+//        else if (playerCount == board.getWinCondition() - 3 && emptyCount == 3) {
+//            // Три шага до победы
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+//
+//    // Алгоритм Minimax с альфа-бета отсечением
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена или достигнута максимальная глубина
+//        if (score == 1000 || score == -1000 || board.isFull() || depth == maxDepth) {
+//            return score;
+//        }
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+////версия 1.8
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    ////версия 1.8.1
+//    //void makeMove(GameBoard& board) override {
+//    //    char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//
+//    //    // Проверка, может ли компьютер выиграть следующим ходом
+//    //    if (tryWin(board, symbol)) {
+//    //        return;
+//    //    }
+//
+//    //    // Проверка, может ли противник выиграть следующим ходом, и блокировка
+//    //    if (tryWin(board, opponentSymbol)) {
+//    //        return;
+//    //    }
+//
+//    //    // Ограничение глубины поиска
+//    //    int maxDepth = (board.getSize() <= 5) ? 5 : 3;
+//
+//    //    // Ограничение количества рассматриваемых ходов для больших полей
+//    //    int maxMoves = (board.getSize() > 7) ? 10 : board.getSize() * board.getSize();
+//
+//    //    // Вектор для хранения всех возможных ходов и их оценок
+//    //    vector<tuple<int, int, int>> moves;
+//
+//    //    // Собираем все возможные ходы и оцениваем их
+//    //    for (int i = 0; i < board.getSize(); ++i) {
+//    //        for (int j = 0; j < board.getSize(); ++j) {
+//    //            if (board.isCellEmpty(i, j)) {
+//    //                // Симулируем ход
+//    //                board.setCell(i, j, symbol);
+//
+//    //                // Оцениваем ход с помощью эвристической функции
+//    //                int score = heuristicEvaluation(board);
+//    //                moves.push_back(make_tuple(score, i, j));
+//
+//    //                // Отменяем ход
+//    //                board.setCell(i, j, ' ');
+//    //            }
+//    //        }
+//    //    }
+//
+//    //    // Сортируем ходы по оценке (от лучшего к худшему)
+//    //    sort(moves.rbegin(), moves.rend());
+//
+//    //    // Ограничиваем количество рассматриваемых ходов
+//    //    if (moves.size() > maxMoves) {
+//    //        moves.resize(maxMoves);
+//    //    }
+//
+//    //    // Перебираем топ-N ходов и выбираем лучший
+//    //    int bestScore = -1000;
+//    //    int bestX = -1, bestY = -1;
+//
+//    //    for (const auto& move : moves) {
+//    //        int score = get<0>(move);
+//    //        int x = get<1>(move);
+//    //        int y = get<2>(move);
+//
+//    //        // Симулируем ход
+//    //        board.setCell(x, y, symbol);
+//
+//    //        // Оцениваем ход с помощью Minimax
+//    //        int currentScore = minimax(board, 0, false, -1000, 1000, maxDepth);
+//    //        board.setCell(x, y, ' ');  // Отменяем ход
+//
+//    //        // Выбираем лучший ход
+//    //        if (currentScore > bestScore) {
+//    //            bestScore = currentScore;
+//    //            bestX = x;
+//    //            bestY = y;
+//    //        }
+//    //    }
+//
+//    //    // Делаем лучший ход
+//    //    if (bestX != -1 && bestY != -1) {
+//    //        board.setCell(bestX, bestY, symbol);
+//    //    }
+//    //}
+//
+//    //версия 1.8.2
+//    void makeMove(GameBoard& board) override {
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//
+//        // Проверка, может ли компьютер выиграть следующим ходом
+//        if (tryWin(board, symbol)) {
+//            return;
+//        }
+//
+//        // Проверка, может ли противник выиграть следующим ходом, и блокировка
+//        if (tryWin(board, opponentSymbol)) {
+//            return;
+//        }
+//
+//        // Ограничение глубины поиска
+//        int maxDepth = (board.getSize() <= 5) ? 5 : 3;
+//
+//        // Вектор для хранения всех возможных ходов и их оценок
+//        vector<tuple<int, int, int>> moves;
+//
+//        // Собираем все возможные ходы и оцениваем их
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    // Симулируем ход
+//                    board.setCell(i, j, symbol);
+//
+//                    // Оцениваем ход с помощью Minimax
+//                    int score = minimax(board, 0, false, -1000, 1000, maxDepth);
+//                    moves.push_back(make_tuple(score, i, j));
+//
+//                    // Отменяем ход
+//                    board.setCell(i, j, ' ');
+//                }
+//            }
+//        }
+//
+//        // Выбираем ход с максимальной оценкой
+//        auto bestMove = *std::max_element(moves.begin(), moves.end(), [](const auto& a, const auto& b) {
+//            return get<0>(a) < get<0>(b);
+//            });
+//
+//        int bestX = get<1>(bestMove);
+//        int bestY = get<2>(bestMove);
+//
+//        // Делаем лучший ход
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Попытка выиграть или заблокировать
+//    bool tryWin(GameBoard& board, char playerSymbol) {
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    // Симулируем ход
+//                    board.setCell(i, j, playerSymbol);
+//
+//                    // Проверяем, привел ли ход к победе
+//                    if (board.checkWin(playerSymbol)) {
+//                        if (playerSymbol == symbol) {
+//                            // Если это ход компьютера, делаем его
+//                            board.setCell(i, j, symbol);
+//                        }
+//                        return true;
+//                    }
+//
+//                    // Отменяем ход
+//                    board.setCell(i, j, ' ');
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 1000;  // Компьютер выиграл
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -1000;  // Противник выиграл
+//        return heuristicEvaluation(board);  // Эвристическая оценка
+//    }
+//
+//    // Эвристическая оценка
+//    int heuristicEvaluation(const GameBoard& board) const {
+//        int score = 0;
+//
+//        // Оценка для текущего игрока (компьютера)
+//        score += evaluateLines(board, symbol);
+//
+//        // Оценка для противника
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        score -= evaluateLines(board, opponentSymbol);
+//
+//        return score;
+//    }
+//
+//    // Оценка линий
+//    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+//        int score = 0;
+//
+//        // Проверка всех возможных линий
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                // Горизонтальные линии
+//                if (j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 0, 1, playerSymbol);
+//                }
+//                // Вертикальные линии
+//                if (i + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 0, playerSymbol);
+//                }
+//                // Диагонали вниз
+//                if (i + board.getWinCondition() <= board.getSize() && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 1, playerSymbol);
+//                }
+//                // Диагонали вверх
+//                if (i - board.getWinCondition() >= -1 && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, -1, 1, playerSymbol);
+//                }
+//            }
+//        }
+//
+//        return score;
+//    }
+//
+//    // Оценка одной линии
+//    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol) const {
+//        int playerCount = 0;
+//        int emptyCount = 0;
+//
+//        for (int k = 0; k < board.getWinCondition(); ++k) {
+//            char cell = board.getCell(x + k * dx, y + k * dy);
+//            if (cell == playerSymbol) {
+//                playerCount++;
+//            }
+//            else if (cell == ' ') {
+//                emptyCount++;
+//            }
+//            else {
+//                // Если встретился символ противника, линия не подходит
+//                return 0;
+//            }
+//        }
+//
+//        // Оценка линии
+//        if (playerCount == board.getWinCondition() - 1 && emptyCount == 1) {
+//            // Один шаг до победы
+//            return 100;
+//        }
+//        else if (playerCount == board.getWinCondition() - 2 && emptyCount == 2) {
+//            // Два шага до победы
+//            return 10;
+//        }
+//        else if (playerCount == board.getWinCondition() - 3 && emptyCount == 3) {
+//            // Три шага до победы
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+//
+//    // Алгоритм Minimax с альфа-бета отсечением
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена или достигнута максимальная глубина
+//        if (score == 1000 || score == -1000 || board.isFull() || depth == maxDepth) {
+//            return score;
+//        }
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+////версия 1.9
+// Класс для игрока-компьютера (сложный уровень)
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    board.setCell(i, j, symbol);
+//                    int score = minimax(board, 0, false);
+//                    board.setCell(i, j, ' ');  // Отмена хода
+//
+//                    if (score > bestScore) {
+//                        bestScore = score;
+//                        bestX = i;
+//                        bestY = j;
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 10;
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -10;
+//        return 0;
+//    }
+//
+//    // Алгоритм минимакс
+//    int minimax(GameBoard& board, int depth, bool isMaximizing) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена
+//        if (score == 10 || score == -10 || board.isFull()) return score;
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
+
+////версия 1.10
+//class ComputerPlayerHard : public Player {
+//public:
+//    ComputerPlayerHard(char sym) : Player(sym) {}
+//
+//    void makeMove(GameBoard& board) override {
+//        int bestScore = -1000;
+//        int bestX = -1, bestY = -1;
+//
+//        // Ограничение глубины поиска
+//        int maxDepth = (board.getSize() <= 5) ? 5 : 3;
+//
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                if (board.isCellEmpty(i, j)) {
+//                    board.setCell(i, j, symbol);
+//                    int score = minimax(board, 0, false, -1000, 1000, maxDepth);
+//                    board.setCell(i, j, ' ');  // Отмена хода
+//
+//                    if (score > bestScore) {
+//                        bestScore = score;
+//                        bestX = i;
+//                        bestY = j;
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (bestX != -1 && bestY != -1) {
+//            board.setCell(bestX, bestY, symbol);
+//        }
+//    }
+//
+//private:
+//    // Оценка хода
+//    int evaluate(const GameBoard& board) const {
+//        if (board.checkWin(symbol)) return 1000;
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        if (board.checkWin(opponentSymbol)) return -1000;
+//        return heuristicEvaluation(board);
+//    }
+//
+//    // Эвристическая оценка
+//    int heuristicEvaluation(const GameBoard& board) const {
+//        int score = 0;
+//
+//        // Оценка для текущего игрока (компьютера)
+//        score += evaluateLines(board, symbol);
+//
+//        // Оценка для противника
+//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//        score -= evaluateLines(board, opponentSymbol);
+//
+//        return score;
+//    }
+//
+//    // Оценка линий
+//    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+//        int score = 0;
+//
+//        // Проверка всех возможных линий
+//        for (int i = 0; i < board.getSize(); ++i) {
+//            for (int j = 0; j < board.getSize(); ++j) {
+//                // Горизонтальные линии
+//                if (j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 0, 1, playerSymbol);
+//                }
+//                // Вертикальные линии
+//                if (i + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 0, playerSymbol);
+//                }
+//                // Диагонали вниз
+//                if (i + board.getWinCondition() <= board.getSize() && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, 1, 1, playerSymbol);
+//                }
+//                // Диагонали вверх
+//                if (i - board.getWinCondition() >= -1 && j + board.getWinCondition() <= board.getSize()) {
+//                    score += evaluateLine(board, i, j, -1, 1, playerSymbol);
+//                }
+//            }
+//        }
+//
+//        return score;
+//    }
+//
+//    // Оценка одной линии
+//    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol) const {
+//        int playerCount = 0;
+//        int emptyCount = 0;
+//
+//        for (int k = 0; k < board.getWinCondition(); ++k) {
+//            char cell = board.getCell(x + k * dx, y + k * dy);
+//            if (cell == playerSymbol) {
+//                playerCount++;
+//            }
+//            else if (cell == ' ') {
+//                emptyCount++;
+//            }
+//            else {
+//                // Если встретился символ противника, линия не подходит
+//                return 0;
+//            }
+//        }
+//
+//        // Оценка линии
+//        if (playerCount == board.getWinCondition() - 1 && emptyCount == 1) {
+//            // Один шаг до победы
+//            return 100;
+//        }
+//        else if (playerCount == board.getWinCondition() - 2 && emptyCount == 2) {
+//            // Два шага до победы
+//            return 10;
+//        }
+//        else if (playerCount == board.getWinCondition() - 3 && emptyCount == 3) {
+//            // Три шага до победы
+//            return 1;
+//        }
+//
+//        return 0;
+//    }
+//
+//    // Алгоритм минимакс с альфа-бета отсечением
+//    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+//        int score = evaluate(board);
+//
+//        // Если игра окончена или достигнута максимальная глубина
+//        if (score == 1000 || score == -1000 || board.isFull() || depth == maxDepth) {
+//            return score;
+//        }
+//
+//        if (isMaximizing) {
+//            int bestScore = -1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        board.setCell(i, j, symbol);
+//                        bestScore = max(bestScore, minimax(board, depth + 1, false, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        alpha = max(alpha, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//        else {
+//            int bestScore = 1000;
+//            for (int i = 0; i < board.getSize(); ++i) {
+//                for (int j = 0; j < board.getSize(); ++j) {
+//                    if (board.isCellEmpty(i, j)) {
+//                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+//                        board.setCell(i, j, opponentSymbol);
+//                        bestScore = min(bestScore, minimax(board, depth + 1, true, alpha, beta, maxDepth));
+//                        board.setCell(i, j, ' ');  // Отмена хода
+//                        beta = min(beta, bestScore);
+//                        if (beta <= alpha) break;  // Альфа-бета отсечение
+//                    }
+//                }
+//            }
+//            return bestScore;
+//        }
+//    }
+//};
