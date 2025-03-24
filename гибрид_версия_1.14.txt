@@ -1,0 +1,234 @@
+//гибрид версия 1.14
+// Класс для игрока-компьютера (сложный уровень с Minimax)
+class ComputerPlayerHard : public Player {
+public:
+    ComputerPlayerHard(char sym) : Player(sym) {}
+
+    void makeMove(GameBoard& board) override {
+        int bestScore = -1000;
+        int bestX = -1, bestY = -1;
+
+        // Ограничение глубины поиска
+        int maxDepth = 4;
+
+        for (int i = 0; i < board.getSize(); ++i) {
+            for (int j = 0; j < board.getSize(); ++j) {
+                if (board.isCellEmpty(i, j)) {
+                    board.setCell(i, j, symbol);
+                    int score = minimax(board, 0, false, -1000, 1000, maxDepth);
+                    board.setCell(i, j, ' ');  // Отмена хода
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestX = i;
+                        bestY = j;
+                    }
+                }
+            }
+        }
+
+        if (bestX != -1 && bestY != -1) {
+            board.setCell(bestX, bestY, symbol);
+        }
+        else {
+            std::cout << "No valid move found!" << std::endl;
+        }
+    }
+
+private:
+    // Оценка хода
+    int evaluate(const GameBoard& board) const {
+        if (board.checkWin(symbol)) return 1000;  // Компьютер выиграл
+        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+        if (board.checkWin(opponentSymbol)) return -1000;  // Противник выиграл
+        return heuristicEvaluation(board);  // Эвристическая оценка
+    }
+
+    // Эвристическая оценка
+    int heuristicEvaluation(const GameBoard& board) const {
+        int score = 0;
+
+        // Оценка для текущего игрока (компьютера)
+        score += evaluateLines(board, symbol);
+
+        // Оценка для противника
+        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+        score -= evaluateLines(board, opponentSymbol);
+
+        return score;
+    }
+
+    // Оценка линий
+    int evaluateLines(const GameBoard& board, char playerSymbol) const {
+        int score = 0;
+
+        // Проверка всех возможных линий
+        for (int i = 0; i < board.getSize(); ++i) {
+            for (int j = 0; j < board.getSize(); ++j) {
+                // Горизонтальные линии
+                if (j + board.getWinCondition() <= board.getSize()) {
+                    score += evaluateLine(board, i, j, 0, 1, playerSymbol);
+                }
+                // Вертикальные линии
+                if (i + board.getWinCondition() <= board.getSize()) {
+                    score += evaluateLine(board, i, j, 1, 0, playerSymbol);
+                }
+                // Диагонали вниз
+                if (i + board.getWinCondition() <= board.getSize() && j + board.getWinCondition() <= board.getSize()) {
+                    score += evaluateLine(board, i, j, 1, 1, playerSymbol);
+                }
+                // Диагонали вверх
+                if (i - board.getWinCondition() >= -1 && j + board.getWinCondition() <= board.getSize()) {
+                    score += evaluateLine(board, i, j, -1, 1, playerSymbol);
+                }
+            }
+        }
+
+        return score;
+    }
+
+    // Оценка одной линии
+    int evaluateLine(const GameBoard& board, int x, int y, int dx, int dy, char playerSymbol) const {
+        int playerCount = 0;
+        int emptyCount = 0;
+
+        for (int k = 0; k < board.getWinCondition(); ++k) {
+            char cell = board.getCell(x + k * dx, y + k * dy);
+            if (cell == playerSymbol) {
+                playerCount++;
+            }
+            else if (cell == ' ') {
+                emptyCount++;
+            }
+            else {
+                // Если встретился символ противника, линия не подходит
+                return 0;
+            }
+        }
+
+        // Оценка линии
+        if (playerCount == board.getWinCondition() - 1 && emptyCount == 1) {
+            // Один шаг до победы
+            return 100;
+        }
+        else if (playerCount == board.getWinCondition() - 2 && emptyCount == 2) {
+            // Два шага до победы
+            return 10;
+        }
+        else if (playerCount == board.getWinCondition() - 3 && emptyCount == 3) {
+            // Три шага до победы
+            return 1;
+        }
+
+        return 0;
+    }
+
+    // Алгоритм минимакс с альфа-бета отсечением
+    int minimax(GameBoard& board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth) {
+        int score = evaluate(board);
+
+        if (score == 1000 || score == -1000 || board.isFull() || depth == maxDepth) {
+            return score;
+        }
+
+        if (isMaximizing) {
+            int bestScore = -1000;
+            for (int i = 0; i < board.getSize(); ++i) {
+                for (int j = 0; j < board.getSize(); ++j) {
+                    if (board.isCellEmpty(i, j)) {
+                        board.setCell(i, j, symbol);
+                        int currentScore = minimax(board, depth + 1, false, alpha, beta, maxDepth);
+                        board.setCell(i, j, ' ');  // Отмена хода
+
+                        if (currentScore > bestScore) {
+                            bestScore = currentScore;
+                        }
+                        alpha = max(alpha, bestScore);
+                        if (beta <= alpha) break;
+                    }
+                }
+            }
+            return bestScore;
+        }
+        else {
+            int bestScore = 1000;
+            for (int i = 0; i < board.getSize(); ++i) {
+                for (int j = 0; j < board.getSize(); ++j) {
+                    if (board.isCellEmpty(i, j)) {
+                        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
+                        board.setCell(i, j, opponentSymbol);
+                        int currentScore = minimax(board, depth + 1, true, alpha, beta, maxDepth);
+                        board.setCell(i, j, ' ');  // Отмена хода
+
+                        if (currentScore < bestScore) {
+                            bestScore = currentScore;
+                        }
+                        beta = min(beta, bestScore);
+                        if (beta <= alpha) break;
+                    }
+                }
+            }
+            return bestScore;
+        }
+    }
+};
+
+// Класс для игрока-компьютера (Monte Carlo Tree Search)
+class ComputerPlayerMCTS : public Player {
+public:
+    ComputerPlayerMCTS(char sym) : Player(sym) {}
+
+    void makeMove(GameBoard& board) override {
+        int bestX = -1, bestY = -1;
+        double bestScore = -1;
+
+        for (int i = 0; i < board.getSize(); ++i) {
+            for (int j = 0; j < board.getSize(); ++j) {
+                if (board.isCellEmpty(i, j)) {
+                    double score = simulateMove(board, i, j);
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestX = i;
+                        bestY = j;
+                    }
+                }
+            }
+        }
+
+        if (bestX != -1 && bestY != -1) {
+            board.setCell(bestX, bestY, symbol);
+        }
+        else {
+            std::cout << "No valid move found!" << std::endl;
+        }
+    }
+
+private:
+    double simulateMove(GameBoard& board, int x, int y) {
+        int wins = 0;
+        int simulations = 100;  // Количество симуляций для каждого хода
+
+        for (int i = 0; i < simulations; ++i) {
+            GameBoard simBoard = board;
+            simBoard.setCell(x, y, symbol);
+
+            char currentPlayer = (symbol == 'X') ? 'O' : 'X';
+            while (!simBoard.isFull() && !simBoard.checkWin(symbol) && !simBoard.checkWin(currentPlayer)) {
+                int moveX, moveY;
+                do {
+                    moveX = rand() % simBoard.getSize();
+                    moveY = rand() % simBoard.getSize();
+                } while (!simBoard.isCellEmpty(moveX, moveY));
+
+                simBoard.setCell(moveX, moveY, currentPlayer);
+                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+            }
+
+            if (simBoard.checkWin(symbol)) {
+                wins++;
+            }
+        }
+
+        return static_cast<double>(wins) / simulations;
+    }
+};
