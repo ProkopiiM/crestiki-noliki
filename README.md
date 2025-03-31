@@ -54,7 +54,7 @@ int ComputerPlayerHard::minimax(GameBoard& board, int depth, bool isMaximizing, 
                 board.setCell(i, j, isMaximizing ? symbol : opponentSymbol);
                 int score = minimax(board, depth+1, !isMaximizing, alpha, beta);
                 board.setCell(i, j, ' ');
-                // ... оптимизация ...
+                // ...
             }
         }
     }
