@@ -140,7 +140,7 @@ private:
 
 //запись результатов игры в файл
 void saveGameResult(const string& result, int size, int winCondition, int mode, int difficulty) {
-    ofstream outFile("C:/Users/ghjbr/source/repos/CrestikiNoliki/x64/Release/game_history.txt", ios::app);  // Открываем файл для добавления (append mode)
+    ofstream outFile("C:/Users/ghjbr/source/repos/CrestikiNoliki/x64/Release/game_history.txt", ios::app);  // Открываем файл для добавления
     if (!outFile) {
         cerr << "Ошибка открытия файла для записи!" << endl;
         return;
