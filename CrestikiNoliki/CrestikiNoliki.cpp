@@ -216,55 +216,6 @@ public:
     }
 };
 
-// версия 1.0
-//class ComputerPlayerMedium : public Player {
-//public:
-//    ComputerPlayerMedium(char sym) : Player(sym) {}
-//
-//    void makeMove(GameBoard& board) override {
-//        // Проверка, может ли компьютер выиграть
-//        if (tryWin(board, symbol)) return;
-//
-//        // Проверка, может ли игрок выиграть, и блокировка
-//        char opponentSymbol = (symbol == 'X') ? 'O' : 'X';
-//        if (tryWin(board, opponentSymbol)) return;
-//
-//        // Случайный ход
-//        makeRandomMove(board);
-//        cout << "Компьютер сделал ход." << endl;
-//    }
-//
-//private:
-//    // Попытка выиграть или заблокировать
-//    bool tryWin(GameBoard& board, char playerSymbol) {
-//        for (int i = 0; i < board.getSize(); ++i) {
-//            for (int j = 0; j < board.getSize(); ++j) {
-//                if (board.isCellEmpty(i, j)) {
-//                    board.setCell(i, j, playerSymbol);
-//                    if (board.checkWin(playerSymbol)) {
-//                        board.setCell(i, j, symbol);  // Ход компьютера
-//                        return true;
-//                    }
-//                    board.setCell(i, j, ' ');  // Отмена хода
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//    // Метод для выполнения случайного хода
-//    void makeRandomMove(GameBoard& board) {
-//        int x, y;
-//        while (true) {
-//            x = rand() % board.getSize();
-//            y = rand() % board.getSize();
-//            if (board.isCellEmpty(x, y)) {
-//                board.setCell(x, y, symbol);
-//                break;
-//            }
-//        }
-//    }
-//};
-
 //версия 1.1 класс для компьютера (среднйи уровень)
 class ComputerPlayerMedium : public Player {
 public:
